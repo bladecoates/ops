@@ -1,0 +1,8 @@
+---
+# defaults file for ops-direnv
+
+xdg_cache_home: "{{ lookup('env', 'XDG_CACHE_HOME') | default(ansible_user_dir ~ '/.cache', true) }}"
+xdg_config_home: "{{ lookup('env', 'XDG_CONFIG_HOME') | default(ansible_user_dir ~ '/.config', true) }}"
+xdg_data_home: "{{ lookup('env', 'XDG_DATA_HOME') | default(ansible_user_dir ~ '/.local/share', true) }}"
+user_home: "{{ lookup('env', 'HOME') | default(ansible_user_dir ~ '/', true) }}"
+user_home_bin: "{{ user_home }}/.local/bin"
