@@ -1,0 +1,16 @@
+ layout_{{ virtualenv_name }}venv() {
+    local pyversion=$1
+    local pvenv=$2
+    if [ -n "$(which pyenv virtualenv)" ]; then
+        pyenv virtualenv --force --quiet ${pyversion} ${pvenv}
+    fi
+    pyenv local --unset
+}
+
+layout_{{ virtualenv_name }}() {
+    if [ -n "$(which pyenv)" ]; then
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)"
+        pyenv activate ${pvenv}
+    fi
+}

@@ -1,0 +1,48 @@
+---
+# tasks file for ops-virtualenv
+- name: set direnv.virtualenv.config content fact
+  set_fact:
+    direnv_virtualenv_config_content: "{{ lookup('template', 'templates/direnv.virtualenv.config.j2') }}"
+  tags:
+    - "install"
+    - "uninstall"
+
+- name: set virtualenv.environment.config content fact
+  set_fact:
+    virtualenv_environment_config_content: "{{ lookup('template', 'templates/virtualenv.environment.config.j2') }}"
+  tags:
+    - "install"
+    - "uninstall"
+
+- name: set virtualenv.shell.config content fact
+  set_fact:
+    virtualenv_shell_config_content: "{{ lookup('template', 'templates/virtualenv.shell.config.j2') }}"
+  tags:
+    - "install"
+    - "uninstall"
+
+- name: install virtualenv
+  block:
+    - name: create direnv.base.config directory
+      file:
+        path: "{{ xdg_config_home }}/direnv"
+        state: directory
+
+    - name: copy direnv.virtualenv.config remote
+      blockinfile:
+        block: "{{ direnv_virtualenv_config_content }}"
+        marker: "# {mark} {{ virtualenv_name }} TOOLS MANAGED BLOCK (direnv.virtualenv.config)"
+        path: "{{ xdg_config_home }}/direnv/direnvrc"
+        create: "yes"
+  tags:
+    - "install"
+
+- name: uninstall direnv
+  block:
+    - name: remove direnv.base.config directory
+      file:
+        path: "{{ xdg_config_home }}/direnv"
+        state: absent
+  tags:
+    - "uninstall"
+    - "never"
