@@ -66,6 +66,11 @@
       shell:
         cmd: "{{ user_home }}/.pyenv/versions/{{ python_version }}/bin/python -m pip install --upgrade pip"
 
+    - name: "create virtualenv {{ virtualenv_name }}"
+      shell:
+        cmd: "~/.pyenv/bin/pyenv virtualenv {{ python_version }} {{ virtualenv_name }}"
+        creates: '{{ user_home }}/.pyenv/versions/{{ virtualenv_name }}'
+
     - name: add virtualenv.environment.config to virtualenv
       blockinfile:
         block: "{{ virtualenv_environment_config_content }}"
@@ -75,6 +80,13 @@
       notify: "direnv.allow"
   tags:
     - "install-virtualenv"
+
+- name: "delete virtualenv {{ virtualenv_name }}"
+  shell:
+    cmd: "~/.pyenv/bin/pyenv virtualenv-delete -f {{ virtualenv_name }}"
+  tags:
+    - "uninstall-virtualenv"
+    - "never"
 
 - name: "uninstall python version {{ python_version }} (this could take a while)"
   shell:
