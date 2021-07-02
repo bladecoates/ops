@@ -4,7 +4,7 @@
   set_fact:
     direnv_virtualenv_config_content: "{{ lookup('template', 'templates/direnv.virtualenv.config.j2') }}"
   tags:
-    - "install"
+    - "install-virtualenv"
     - "uninstall-all"
     - "uninstall-virtualenv"
 
@@ -12,7 +12,7 @@
   set_fact:
     virtualenv_environment_config_content: "{{ lookup('template', 'templates/virtualenv.environment.config.j2') }}"
   tags:
-    - "install"
+    - "install-virtualenv"
     - "uninstall-all"
     - "uninstall-virtualenv"
 
@@ -20,7 +20,7 @@
   set_fact:
     virtualenv_shell_config_content: "{{ lookup('template', 'templates/virtualenv.shell.config.j2') }}"
   tags:
-    - "install"
+    - "install-virtualenv"
     - "uninstall-all"
     - "uninstall-virtualenv"
 
@@ -74,7 +74,7 @@
         create: "yes"
       notify: "direnv.allow"
   tags:
-    - "install"
+    - "install-virtualenv"
 
 - name: "uninstall python version {{ python_version }} (this could take a while)"
   shell:

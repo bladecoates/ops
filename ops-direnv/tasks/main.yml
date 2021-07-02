@@ -4,15 +4,17 @@
   set_fact:
     direnv_shell_config_content: "{{ lookup('template', 'templates/direnv.shell.config.j2') }}"
   tags:
-    - "install"
-    - "uninstall"
+    - "install-direnv"
+    - "uninstall-all"
+    - "uninstall-direnv"
 
 - name: set direnv.base.config content fact
   set_fact:
     direnv_base_config_content: "{{ lookup('template', 'templates/direnv.base.config.j2') }}"
   tags:
-    - "install"
-    - "uninstall"
+    - "install-direnv"
+    - "uninstall-all"
+    - "uninstall-direnv"
 
 - name: install direnv
   block:
@@ -50,7 +52,7 @@
         path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bash_profile{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
       when: ansible_os_family == 'Darwin'
   tags:
-    - "install"
+    - "install-direnv"
 
 - name: uninstall direnv
   block:
@@ -81,5 +83,6 @@
         state: absent
       when: ansible_os_family == 'Darwin'
   tags:
-    - "uninstall"
+    - "uninstall-all"
+    - "uninstall-direnv"
     - "never"

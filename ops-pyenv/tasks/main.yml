@@ -27,22 +27,25 @@
   set_fact:
     pyenv_shell_content: "{{ lookup('template', 'templates/pyenv.shell.config.j2') }}"
   tags:
-    - "install"
-    - "uninstall"
+    - "install-pyenv"
+    - "uninstall-all"
+    - "uninstall-pyenv"
 
 - name: set pyenv begin.profile content fact
   set_fact:
     pyenv_begin_profile_content: "{{ lookup('template', 'templates/pyenv.begin.profile.j2') }}"
   tags:
-    - "install"
-    - "uninstall"
+    - "install-pyenv"
+    - "uninstall-all"
+    - "uninstall-pyenv"
 
 - name: set pyenv end.profile content fact
   set_fact:
     pyenv_end_profile_content: "{{ lookup('template', 'templates/pyenv.end.profile.j2') }}"
   tags:
-    - "install"
-    - "uninstall"
+    - "install-pyenv"
+    - "uninstall-all"
+    - "uninstall-pyenv"
 
 - name: install pyenv
   block:
@@ -98,7 +101,7 @@
         insertafter: EOF
       when: ansible_os_family == 'Darwin'
   tags:
-    - "install"
+    - "install-pyenv"
 
 - name: uninstall pyenv
   block:
@@ -160,5 +163,6 @@
         state: absent
       when: ansible_os_family == 'Darwin'
   tags:
-    - "uninstall"
+    - "uninstall-all"
+    - "uninstall-pyenv"
     - "never"
