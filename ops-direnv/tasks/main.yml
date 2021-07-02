@@ -1,8 +1,15 @@
 ---
 # tasks file for ops-direnv
-- name: set direnv bashrc content fact
+- name: set direnv.shell.config content fact
   set_fact:
-    direnv_content: "{{ lookup('template', 'templates/direnv.shell.config.j2') }}"
+    direnv_shell_config_content: "{{ lookup('template', 'templates/direnv.shell.config.j2') }}"
+  tags:
+    - "install"
+    - "uninstall"
+
+- name: set direnv.base.config content fact
+  set_fact:
+    direnv_base_config_content: "{{ lookup('template', 'templates/direnv.base.config.j2') }}"
   tags:
     - "install"
     - "uninstall"
@@ -17,16 +24,28 @@
         bin_path: "{{ user_home_bin }}"
       when: ansible_os_family != 'Darwin'
 
+    - name: create direnv.base.config directory
+      file:
+        path: "{{ xdg_config_home }}/direnv"
+        state: directory
+
+    - name: copy direnv.base.config to remote
+      blockinfile:
+        block: "{{ direnv_base_config_content }}"
+        marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.base.config)"
+        path: "{{ xdg_config_home }}/direnv/direnvrc"
+        create: "yes"
+
     - name: add direnv to bashrc
       blockinfile:
-        block: "{{ direnv_content }}"
+        block: "{{ direnv_shell_config_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
         path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
       when: ansible_os_family != 'Darwin'
 
     - name: add direnv to bashrc
       blockinfile:
-        block: "{{ direnv_content }}"
+        block: "{{ direnv_shell_config_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
         path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bash_profile{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
       when: ansible_os_family == 'Darwin'
@@ -41,9 +60,14 @@
         state: absent
       when: ansible_os_family != 'Darwin'
 
+    - name: remove direnv.base.config directory
+      file:
+        path: "{{ xdg_config_home }}/direnv"
+        state: absent
+
     - name: remove direnv from bashrc
       blockinfile:
-        block: "{{ direnv_content }}"
+        block: "{{ direnv_shell_config_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
         path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
         state: absent
@@ -51,7 +75,7 @@
 
     - name: remove direnv from bashrc
       blockinfile:
-        block: "{{ direnv_content }}"
+        block: "{{ direnv_shell_config_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
         path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bash_profile{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
         state: absent
