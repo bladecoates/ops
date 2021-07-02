@@ -9,3 +9,6 @@ user_home_bin: "{{ user_home }}/.local/bin"
 
 virtualenv_name: "ops"
 virtualenv_user_data: "{{ user_home }}/{{ virtualenv_name }}"
+
+virtualenv_user_config: "{{ xdg_config_home }}/{{ virtualenv_name }}"
+virtualenv_user_cache: "{{ xdg_cache_home }}/{{ virtualenv_name }}"

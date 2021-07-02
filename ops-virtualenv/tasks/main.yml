@@ -23,6 +23,16 @@
 
 - name: install virtualenv
   block:
+    - name: create virtualenv user config directory
+      file:
+        path: "{{ virtualenv_user_config }}"
+        state: directory
+
+    - name: create virtualenv user cache directory
+      file:
+        path: "{{ virtualenv_user_cache }}"
+        state: directory
+
     - name: create virtualenv user data directory
       file:
         path: "{{ virtualenv_user_data }}"
