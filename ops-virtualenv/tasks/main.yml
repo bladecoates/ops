@@ -5,21 +5,24 @@
     direnv_virtualenv_config_content: "{{ lookup('template', 'templates/direnv.virtualenv.config.j2') }}"
   tags:
     - "install"
-    - "uninstall"
+    - "uninstall-all"
+    - "uninstall-virtualenv"
 
 - name: set virtualenv.environment.config content fact
   set_fact:
     virtualenv_environment_config_content: "{{ lookup('template', 'templates/virtualenv.environment.config.j2') }}"
   tags:
     - "install"
-    - "uninstall"
+    - "uninstall-all"
+    - "uninstall-virtualenv"
 
 - name: set virtualenv.shell.config content fact
   set_fact:
     virtualenv_shell_config_content: "{{ lookup('template', 'templates/virtualenv.shell.config.j2') }}"
   tags:
     - "install"
-    - "uninstall"
+    - "uninstall-all"
+    - "uninstall-virtualenv"
 
 - name: install virtualenv
   block:
@@ -49,15 +52,49 @@
         marker: "# {mark} {{ virtualenv_name|upper }} TOOLS MANAGED BLOCK (direnv.virtualenv.config)"
         path: "{{ xdg_config_home }}/direnv/direnvrc"
         create: "yes"
+
+    - name: "update pyenv (this could take a while)"
+      shell:
+        cmd: "{{ user_home }}/.pyenv/bin/pyenv update"
+
+    - name: "install python version {{ python_version }} (this could take a while)"
+      shell:
+        cmd: "{{ user_home }}/.pyenv/bin/pyenv install {{ python_version }}"
+        creates: "{{ user_home }}/.pyenv/versions/{{ python_version }}"
+
+    - name: upgrade python pip version (this could take a while)
+      shell:
+        cmd: "{{ user_home }}/.pyenv/versions/{{ python_version }}/bin/python -m pip install --upgrade pip"
+
+    - name: add virtualenv.environment.config to virtualenv
+      blockinfile:
+        block: "{{ virtualenv_environment_config_content }}"
+        marker: "# {mark} {{ virtualenv_name|upper }} TOOLS MANAGED BLOCK (virtualenv.environment.config)"
+        path: "{{ virtualenv_environment_file }}"
+        create: "yes"
+      notify: "direnv.allow"
   tags:
     - "install"
 
-- name: uninstall direnv
+- name: "uninstall python version {{ python_version }} (this could take a while)"
+  shell:
+    cmd: "{{ user_home }}/.pyenv/bin/pyenv uninstall -f {{ python_version }}"
+  tags:
+    - "uninstall-virtualenv"
+    - "never"
+
+- name: uninstall virtualenv
   block:
     - name: remove direnv.base.config directory
       file:
         path: "{{ xdg_config_home }}/direnv"
         state: absent
+
+    - name: remove virtualenv.environment.config file
+      file:
+        path: "{{ virtualenv_environment_file }}"
+        state: absent
   tags:
-    - "uninstall"
+    - "uninstall-all"
+    - "uninstall-virtualenv"
     - "never"

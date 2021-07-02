@@ -12,3 +12,5 @@ virtualenv_user_data: "{{ user_home }}/{{ virtualenv_name }}"
 
 virtualenv_user_config: "{{ xdg_config_home }}/{{ virtualenv_name }}"
 virtualenv_user_cache: "{{ xdg_cache_home }}/{{ virtualenv_name }}"
+
+virtualenv_environment_file: "{{ virtualenv_user_data }}/.envrc"
