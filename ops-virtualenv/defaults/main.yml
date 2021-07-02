@@ -7,4 +7,5 @@ xdg_data_home: "{{ lookup('env', 'XDG_DATA_HOME') | default(ansible_user_dir ~ '
 user_home: "{{ lookup('env', 'HOME') | default(ansible_user_dir ~ '/', true) }}"
 user_home_bin: "{{ user_home }}/.local/bin"
 
-virtualenv_name: "OPS"
+virtualenv_name: "ops"
+virtualenv_user_data: "{{ user_home }}/{{ virtualenv_name }}"

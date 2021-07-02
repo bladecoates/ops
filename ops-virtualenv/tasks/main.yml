@@ -23,6 +23,11 @@
 
 - name: install virtualenv
   block:
+    - name: create virtualenv user data directory
+      file:
+        path: "{{ virtualenv_user_data }}"
+        state: directory
+
     - name: create direnv.base.config directory
       file:
         path: "{{ xdg_config_home }}/direnv"
@@ -31,7 +36,7 @@
     - name: copy direnv.virtualenv.config remote
       blockinfile:
         block: "{{ direnv_virtualenv_config_content }}"
-        marker: "# {mark} {{ virtualenv_name }} TOOLS MANAGED BLOCK (direnv.virtualenv.config)"
+        marker: "# {mark} {{ virtualenv_name|upper }} TOOLS MANAGED BLOCK (direnv.virtualenv.config)"
         path: "{{ xdg_config_home }}/direnv/direnvrc"
         create: "yes"
   tags:
