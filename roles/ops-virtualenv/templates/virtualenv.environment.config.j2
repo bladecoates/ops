@@ -1,0 +1,14 @@
+# -*- mode: sh; -*-
+# (rootdir)/.envrc : direnv configuration file
+# see https://direnv.net/
+# pyversion=$(head .python-version)
+# pvenv=$(head     .python-virtualenv)
+pyversion={{ virtualenv_name }}
+pvenv={{ virtualenv_name }}
+
+use python ${pyversion}
+# Create the virtualenv if not yet done
+layout {{ virtualenv_name }}venv ${pyversion} ${pvenv}
+# activate it
+layout {{ virtualenv_name }} ${pvenv}
+unset PS1

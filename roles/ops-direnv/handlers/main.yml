@@ -1,0 +1,6 @@
+---
+# handlers file for ops-direnv
+- name: allow config to be used by direnv
+  ansible.builtin.shell:
+    cmd: "direnv allow {{ virtualenv_environment_file }}"
+  listen: "direnv.allow"

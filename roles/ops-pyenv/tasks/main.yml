@@ -103,6 +103,19 @@
   tags:
     - "install-pyenv"
 
+- name: "update pyenv (this could take a while)"
+  shell:
+    cmd: "{{ user_home }}/.pyenv/bin/pyenv update"
+  tags:
+    - "install-python"
+
+- name: "install python version {{ python_version }} (this could take a while)"
+  shell:
+    cmd: "{{ user_home }}/.pyenv/bin/pyenv install {{ python_version }}"
+    creates: "{{ user_home }}/.pyenv/versions/{{ python_version }}"
+  tags:
+    - "install-python"
+
 - name: uninstall pyenv
   block:
     - name: uninstall pyenv
@@ -165,4 +178,12 @@
   tags:
     - "uninstall-all"
     - "uninstall-pyenv"
+    - "never"
+
+- name: "uninstall python version {{ python_version }} (this could take a while)"
+  shell:
+    cmd: "{{ user_home }}/.pyenv/bin/pyenv uninstall -f {{ python_version }}"
+  tags:
+    - "uninstall-virtualenv"
+    - "uninstall-python"
     - "never"

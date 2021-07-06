@@ -1,0 +1,11 @@
+{{ virtualenv_name }}_activate() {
+    {{ virtualenv_name }}_PRE_CWD=$(pwd)
+    cd $HOME/{{ virtualenv_name }}
+}
+
+{{ virtualenv_name }}_deactivate() {
+    cd ${{ virtualenv_name }}_PRE_CWD
+}
+
+alias {{ virtualenv_name }}.activate={{ virtualenv_name }}_activate
+alias {{ virtualenv_name }}.deactivate={{ virtualenv_name }}_deactivate
