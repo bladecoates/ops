@@ -62,6 +62,10 @@
         cmd: "~/.pyenv/bin/pyenv virtualenv {{ python_version }} {{ virtualenv_name }}"
         creates: '{{ user_home }}/.pyenv/versions/{{ virtualenv_name }}'
 
+    - name: upgrade python pip version (this could take a while)
+      shell:
+        cmd: "{{ user_home }}/.pyenv/versions/{{ virtualenv_name }}/bin/python -m pip install --upgrade pip"
+
     - name: add virtualenv.environment.config to virtualenv
       blockinfile:
         block: "{{ virtualenv_environment_config_content }}"
