@@ -103,6 +103,14 @@
   tags:
     - "install-pyenv"
 
+- name: Create a symbolic link from .profile to .bash_profile
+  ansible.builtin.file:
+    src: ~/.profile
+    dest: ~/.bash_profile
+    state: link
+  tags:
+    - "install-pyenv"
+
 - name: "update pyenv (this could take a while)"
   shell:
     cmd: "{{ user_home }}/.pyenv/bin/pyenv update"
