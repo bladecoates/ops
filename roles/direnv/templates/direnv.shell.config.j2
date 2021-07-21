@@ -1,3 +1,4 @@
+{% if ansible_user_shell == '/bin/bash' %}
 show_virtual_env() {
   if [[ -n "$VIRTUAL_ENV" && -n "$DIRENV_DIR" ]]; then
     echo "[$(basename $VIRTUAL_ENV)] "
@@ -5,5 +6,16 @@ show_virtual_env() {
 }
 export -f show_virtual_env
 PS1='$(show_virtual_env)'$PS1
+
+{% elif ansible_user_shell == '/bin/zsh'%}
+setopt PROMPT_SUBST
+
+show_virtual_env() {
+  if [[ -n "$VIRTUAL_ENV" && -n "$DIRENV_DIR" ]]; then
+    echo "($(basename $VIRTUAL_ENV))"
+  fi
+}
+PS1='$(show_virtual_env)'$PS1
+{% endif %}
 
 eval "$(direnv hook {{ user_shell }})"

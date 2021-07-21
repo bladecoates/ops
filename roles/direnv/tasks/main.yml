@@ -24,7 +24,6 @@
         creates: "{{ user_home_bin }}/direnv"
       environment:
         bin_path: "{{ user_home_bin }}"
-      when: ansible_os_family != 'Darwin'
 
     - name: create direnv.base.config directory
       file:
@@ -42,15 +41,7 @@
       blockinfile:
         block: "{{ direnv_shell_config_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
-        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
-      when: ansible_os_family != 'Darwin'
-
-    - name: add direnv to bashrc
-      blockinfile:
-        block: "{{ direnv_shell_config_content }}"
-        marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
-        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bash_profile{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
-      when: ansible_os_family == 'Darwin'
+        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == '/bin/zsh'%}~/.zshrc{% endif %}"
   tags:
     - "install-direnv"
 
@@ -60,7 +51,6 @@
       file:
         path: "{{ user_home_bin }}/direnv"
         state: absent
-      when: ansible_os_family != 'Darwin'
 
     - name: remove direnv.base.config directory
       file:
@@ -71,17 +61,8 @@
       blockinfile:
         block: "{{ direnv_shell_config_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
-        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
+        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == '/bin/zsh'%}~/.zshrc{% endif %}"
         state: absent
-      when: ansible_os_family != 'Darwin'
-
-    - name: remove direnv from bashrc
-      blockinfile:
-        block: "{{ direnv_shell_config_content }}"
-        marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
-        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bash_profile{% elif ansible_user_shell == 'zsh'%}~/.zshrc{% endif %}"
-        state: absent
-      when: ansible_os_family == 'Darwin'
   tags:
     - "uninstall-all"
     - "uninstall-direnv"
