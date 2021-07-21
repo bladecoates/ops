@@ -58,13 +58,13 @@
       blockinfile:
         block: "{{ pyenv_shell_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (pyenv.shell.config)"
-        path: "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == '/bin/zsh'%}~/.zshrc{% endif %}"
+        path: "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zshrc{% endif %}"
 
     - name: add pyenv to begin.profile
       blockinfile:
         block: "{{ pyenv_begin_profile_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (pyenv.begin.profile)"
-        path: "{% if ansible_user_shell == '/bin/bash' %}~/.profile{% elif ansible_user_shell == '/bin/zsh'%}~/.zprofile{% endif %}"
+        path: "{% if ansible_user_shell == '/bin/bash' %}~/.profile{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zprofile{% endif %}"
         insertbefore: BOF
         create: "yes"
 
@@ -80,7 +80,7 @@
       blockinfile:
         block: "{{ pyenv_end_profile_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (pyenv.end.profile)"
-        path: "{% if ansible_user_shell == '/bin/bash' %}~/.profile{% elif ansible_user_shell == '/bin/zsh'%}~/.zprofile{% endif %}"
+        path: "{% if ansible_user_shell == '/bin/bash' %}~/.profile{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zprofile{% endif %}"
         insertafter: EOF
         create: "yes"
 
@@ -90,7 +90,7 @@
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (pyenv.end.profile)"
         path: "~/.profile"
         insertafter: EOF
-      when: ansible_os_family != 'Darwin' and ansible_user_shell == '/bin/zsh'
+      when: ansible_os_family != 'Darwin' and ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']
   tags:
     - "install-pyenv"
 
@@ -126,14 +126,14 @@
       blockinfile:
         block: "{{ pyenv_shell_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (pyenv.shell.config)"
-        path: "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == '/bin/zsh'%}~/.zshrc{% endif %}"
+        path: "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zshrc{% endif %}"
         state: absent
 
     - name: remove pyenv from begin.profile
       blockinfile:
         block: "{{ pyenv_begin_profile_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (pyenv.begin.profile)"
-        path: "{% if ansible_user_shell == '/bin/bash' %}~/.profile{% elif ansible_user_shell == '/bin/zsh'%}~/.zprofile{% endif %}"
+        path: "{% if ansible_user_shell == '/bin/bash' %}~/.profile{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zprofile{% endif %}"
         insertbefore: BOF
         state: absent
 
@@ -144,13 +144,13 @@
         path: "~/.profile"
         insertbefore: BOF
         state: absent
-      when: ansible_os_family != 'Darwin' and ansible_user_shell == '/bin/zsh'
+      when: ansible_os_family != 'Darwin' and ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']
 
     - name: remove pyenv from end.profile
       blockinfile:
         block: "{{ pyenv_end_profile_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (pyenv.end.profile)"
-        path: "{% if ansible_user_shell == '/bin/bash' %}~/.profile{% elif ansible_user_shell == '/bin/zsh'%}~/.zprofile{% endif %}"
+        path: "{% if ansible_user_shell == '/bin/bash' %}~/.profile{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zprofile{% endif %}"
         insertafter: EOF
         state: absent
 
@@ -161,7 +161,7 @@
         path: "~/.profile"
         insertafter: EOF
         state: absent
-      when: ansible_os_family != 'Darwin' and ansible_user_shell == '/bin/zsh'
+      when: ansible_os_family != 'Darwin' and ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']
 
   tags:
     - "uninstall-all"

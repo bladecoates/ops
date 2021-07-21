@@ -7,7 +7,7 @@ show_virtual_env() {
 export -f show_virtual_env
 PS1='$(show_virtual_env)'$PS1
 
-{% elif ansible_user_shell == '/bin/zsh'%}
+{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}
 setopt PROMPT_SUBST
 
 show_virtual_env() {

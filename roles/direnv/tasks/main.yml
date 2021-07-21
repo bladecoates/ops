@@ -41,7 +41,7 @@
       blockinfile:
         block: "{{ direnv_shell_config_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
-        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == '/bin/zsh'%}~/.zshrc{% endif %}"
+        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zshrc{% endif %}"
   tags:
     - "install-direnv"
 
@@ -61,7 +61,7 @@
       blockinfile:
         block: "{{ direnv_shell_config_content }}"
         marker: "# {mark} OPS TOOLS MANAGED BLOCK (direnv.shell.config)"
-        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell == '/bin/zsh'%}~/.zshrc{% endif %}"
+        path:  "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zshrc{% endif %}"
         state: absent
   tags:
     - "uninstall-all"
