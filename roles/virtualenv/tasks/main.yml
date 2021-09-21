@@ -62,6 +62,12 @@
         cmd: "~/.pyenv/bin/pyenv virtualenv {{ python_version }} {{ virtualenv_name }}"
         creates: '{{ user_home }}/.pyenv/versions/{{ virtualenv_name }}'
 
+    - name: "add {{ virtualenv_name }}.(activate|deactivate) to {{ ansible_user_shell }}"
+      blockinfile:
+        block: "{{ virtualenv_shell_config_content }}"
+        marker: "# {mark} OPS TOOLS MANAGED BLOCK ({{ virtualenv_name }}.virtualenv.shell.config)"
+        path: "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zshrc{% endif %}"
+
     - name: upgrade python pip version (this could take a while)
       shell:
         cmd: "{{ user_home }}/.pyenv/versions/{{ virtualenv_name }}/bin/python -m pip install --upgrade pip"
@@ -93,6 +99,13 @@
     - name: remove virtualenv.environment.config file
       file:
         path: "{{ virtualenv_environment_file }}"
+        state: absent
+
+    - name: "add {{ virtualenv_name }}.(activate|deactivate) to {{ ansible_user_shell }}"
+      blockinfile:
+        block: "{{ virtualenv_shell_config_content }}"
+        marker: "# {mark} OPS TOOLS MANAGED BLOCK ({{ virtualenv_name }}.virtualenv.shell.config)"
+        path: "{% if ansible_user_shell == '/bin/bash' %}~/.bashrc{% elif ansible_user_shell in ['/bin/zsh', '/usr/bin/zsh']%}~/.zshrc{% endif %}"
         state: absent
   tags:
     - "uninstall-all"
