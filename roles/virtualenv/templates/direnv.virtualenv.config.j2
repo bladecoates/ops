@@ -1,4 +1,4 @@
-layout_{{ virtualenv_name }}venv() {
+layout_create_venv() {
     local pyversion=$1
     local pvenv=$2
     if [ -n "$(which pyenv virtualenv)" ]; then
@@ -7,7 +7,7 @@ layout_{{ virtualenv_name }}venv() {
     pyenv local --unset
 }
 
-layout_{{ virtualenv_name }}() {
+layout_activate_venv() {
     if [ -n "$(which pyenv)" ]; then
         eval "$(pyenv init -)"
         eval "$(pyenv virtualenv-init -)"

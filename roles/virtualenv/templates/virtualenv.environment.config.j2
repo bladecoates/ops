@@ -3,12 +3,12 @@
 # see https://direnv.net/
 # pyversion=$(head .python-version)
 # pvenv=$(head     .python-virtualenv)
-pyversion={{ virtualenv_name }}
+pyversion={{ python_version }}
 pvenv={{ virtualenv_name }}
 
 use python ${pyversion}
 # Create the virtualenv if not yet done
-layout {{ virtualenv_name }}venv ${pyversion} ${pvenv}
+layout create_venv ${pyversion} ${pvenv}
 # activate it
-layout {{ virtualenv_name }} ${pvenv}
+layout activate_venv ${pvenv}
 unset PS1
